@@ -50,8 +50,6 @@ root.set({
                                 'phoneNumber': '780-223-4567'
                             },
                         },
-                        'timeBetweenNotifications': 10,
-                        'NumberOfImagesPerNotification': 15,
                         'QRCode': "123456"
                     },
                     'notifications':{
@@ -67,7 +65,8 @@ root.set({
                 'currentImage': "basi21739sadvuias",
                 'timestamp': '2020-01-16 15:42:00',
                 'QRCode': "123456",
-                'registered': True
+                'registered': True,
+                "registeredUserName": "testUsername"
         }
     },
     'NotificationImages':{
