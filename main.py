@@ -29,8 +29,10 @@ def setup():
 
     modelName = configFile["modelName"]
     serviceAccountFile = configFile["serviceAccountFile"]
+    liveFeedSize = (configFile["LiveFeedImageHeight"], configFile["LiveFeedImageWidth"])
+    QRCode = configFile["QRCode"]
 
-    return modelName, serviceAccountFile
+    return modelName, serviceAccountFile, liveFeedSize, QRCode
 
 def print_done():
     print("")
@@ -46,10 +48,10 @@ def print_done():
     print("")
 
 def run():
-    modelName, serviceAccountFile = setup()
+    modelName, serviceAccountFile, liveFeedSize, QRCode = setup()
     
     faceDetection = FaceDetection(modelName, serviceAccountFile)
-    liveFeed = LiveFeed(serviceAccountFile)
+    liveFeed = LiveFeed(liveFeedSize, serviceAccountFile, QRCode)
 
     # Start Face Detection
     start_thread(faceDetection.run)

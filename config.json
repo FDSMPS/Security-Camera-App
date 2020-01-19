@@ -1,4 +1,7 @@
 {
     "serviceAccountFile": "fdsmps-android-firebase-adminsdk-2wplu-a5b2d0a50e.json",
-    "modelName": "Input-C-1-Output--2020-01--14-08-54"
+    "modelName": "Input-C-1-Output--2020-01--14-08-54",
+    "LiveFeedImageHeight": 1080,
+    "LiveFeedImageWidth": 720,
+    "QRCode": "123456"
 }

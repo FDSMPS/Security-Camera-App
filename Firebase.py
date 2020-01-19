@@ -38,6 +38,23 @@ class FirebaseInterface():
 
         return ref.get()
 
+    def get_this_security_camera_ref(self, QRCode):
+        return self.root.child("SecurityCameras").child(QRCode)
+
+    def is_registered(self, QRCode):
+        ref = self.get_this_security_camera_ref(QRCode)
+        data = self.get_data(ref)
+        registered = data['registered']
+        return registered
+
+    def get_live_feed_image_ref(self, QRCode):
+        ref = self.get_this_security_camera_ref(QRCode)
+        liveFeedImageRef = ref.child("currentImage")
+        return liveFeedImageRef
+
+    def update_live_feed(self, liveFeedImageRef, imageString):
+        return self.set_data(liveFeedImageRef, imageString)
+
     def set_data(self, ref, data):
         FirebaseInterface.lock.acquire()
         result = ref.set(data)
