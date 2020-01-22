@@ -72,7 +72,7 @@ root.set({
     'NotificationImages':{
         'qwerty':{
             'notificationID': "qwerty",
-            'Images': ["21ebo123b12ui3b12", "12o3iu21o3o13213", "ipsahioho21h32138"]
+            'Image': "21ebo123b12ui3b12"
         }
     }
 })

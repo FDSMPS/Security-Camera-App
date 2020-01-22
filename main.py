@@ -1,4 +1,5 @@
 # Surpress extraneous TF messages
+print("Configuration Starting.")
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 
@@ -29,10 +30,16 @@ def setup():
 
     modelName = configFile["modelName"]
     serviceAccountFile = configFile["serviceAccountFile"]
-    liveFeedSize = (configFile["LiveFeedImageHeight"], configFile["LiveFeedImageWidth"])
+    liveFeedSize = (configFile["LiveFeedImageWidth"], configFile["LiveFeedImageHeight"])
     QRCode = configFile["QRCode"]
+    MLImageSize = (configFile["MLImageWidth"], configFile["MLImageHeight"])
+    PartitionSize = (configFile["PartitionWidth"], configFile["PartitionHeight"])
+    PartitionImageWidthDelta = configFile["PartitionImageWidthDelta"]
+    PartitionImageHieghtDelta = configFile["PartitionImageHieghtDelta"]
 
-    return modelName, serviceAccountFile, liveFeedSize, QRCode
+
+    return modelName, serviceAccountFile, liveFeedSize, QRCode, MLImageSize, \
+        PartitionImageWidthDelta, PartitionImageHieghtDelta, PartitionSize
 
 def print_done():
     print("")
@@ -48,11 +55,22 @@ def print_done():
     print("")
 
 def run():
-    modelName, serviceAccountFile, liveFeedSize, QRCode = setup()
-    
-    faceDetection = FaceDetection(modelName, serviceAccountFile)
-    liveFeed = LiveFeed(liveFeedSize, serviceAccountFile, QRCode)
+    modelName, serviceAccountFile, liveFeedSize, QRCode, MLImageSize, \
+        PartitionImageWidthDelta, PartitionImageHieghtDelta, PartitionSize = setup()
 
+    firebaseConnection = FirebaseInterface(serviceAccountFile)
+    securityCameraReference = firebaseConnection.get_security_camera_ref(QRCode)
+
+    if not firebaseConnection.is_registered(securityCameraReference):
+        print("Camera is not yet registered. To register camera please scan the camera's QR code from your mobile app.")
+        exit()
+    
+    faceDetection = FaceDetection(modelName, MLImageSize, \
+        PartitionImageWidthDelta, PartitionImageHieghtDelta, PartitionSize, securityCameraReference)
+    liveFeed = LiveFeed(liveFeedSize, securityCameraReference)
+
+    print("Configuration Successfully Completed.")
+    
     # Start Face Detection
     start_thread(faceDetection.run)
 
