@@ -6,9 +6,8 @@ from firebase_admin import db
 class FirebaseInterface():
     lock = threading.Lock()
     instancesMade = 0
-    connection = None
 
-    def sendNotification():
+    def sendNotification(self):
         pass
 
     def __init__(self, serviceAccountFile = None):
@@ -19,7 +18,7 @@ class FirebaseInterface():
         FirebaseInterface.instancesMade += 1
 
         if FirebaseInterface.instancesMade == 1:
-            FirebaseInterface.connection = self.connect_to_firebase(serviceAccountFile)
+            self.connect_to_firebase(serviceAccountFile)
 
         self.root = db.reference()
     

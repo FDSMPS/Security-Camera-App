@@ -1,11 +1,16 @@
 import threading
 from random import random
+import RPi.GPIO as GPIO
 
 class MotionSensorInterface():
     lock = threading.Lock()
     
     def __init__(self):
-        pass
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(11, GPIO.IN)
+        GPIO.setup(13, GPIO.IN)
+        GPIO.setup(15, GPIO.IN)
 
     def mimic_is_motion_detected(self):
         result = random() > 0.8
@@ -14,8 +19,7 @@ class MotionSensorInterface():
     def is_motion_detected(self):
         # MotionSensorInterface.lock.acquire()
 
-        img = self.mimic_is_motion_detected()
-
+        detected = GPIO.input(11) or GPIO.input(13) or GPIO.input(15)
         # MotionSensorInterface.lock.release()
 
-        return img
+        return detected
