@@ -61,6 +61,7 @@ def run():
     firebaseConnection = FirebaseInterface(serviceAccountFile)
     securityCameraReference = firebaseConnection.get_security_camera_ref(QRCode)
 
+
     if not firebaseConnection.is_registered(securityCameraReference):
         print("Camera is not yet registered. To register camera please scan the camera's QR code from your mobile app.")
         exit()

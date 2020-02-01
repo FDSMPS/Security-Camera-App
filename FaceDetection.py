@@ -12,6 +12,7 @@ class FaceDetection():
     def run(self):
 
         motionSensor = MotionSensorInterface()
+        model = load_model(self.modelName)
 
         while True:
             if motionSensor.is_motion_detected():
@@ -21,10 +22,11 @@ class FaceDetection():
                     self.PartitionImageWidthDelta, self.PartitionImageHieghtDelta, self.PartitionSize)
                 
                 # sometimes false results return x.xx E-16 therefore we set the threashold at 0.5 instead of 0
-                faceDetected = np.sum(self.model.predict(np.array(partitionedImages))) > 0.5
-                
+                faceDetected = np.sum(model.predict(np.array(partitionedImages))) > 0.5
+                print("Face Detected? " + str(faceDetected))
                 if faceDetected:
                     pass
+
 
     def load_FD_Model(self, modelName):
         return load_model(modelName)
@@ -39,3 +41,4 @@ class FaceDetection():
         self.PartitionSize = PartitionSize
         self.securityCameraReference = securityCameraReference
         self.firebase = FirebaseInterface()
+        self.modelName = modelName

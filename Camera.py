@@ -4,25 +4,45 @@ from os.path import join
 from PIL import Image
 from random import randint
 
+import io
+from picamera import PiCamera
+from picamera import mmal
+import ctypes as ct
+
+
+class PiCameraWorld(PiCamera):
+    AWB_MODES = {
+        'off':           mmal.MMAL_PARAM_AWBMODE_OFF,
+        'auto':          mmal.MMAL_PARAM_AWBMODE_AUTO,
+        'sunlight':      mmal.MMAL_PARAM_AWBMODE_SUNLIGHT,
+        'cloudy':        mmal.MMAL_PARAM_AWBMODE_CLOUDY,
+        'shade':         mmal.MMAL_PARAM_AWBMODE_SHADE,
+        'tungsten':      mmal.MMAL_PARAM_AWBMODE_TUNGSTEN,
+        'fluorescent':   mmal.MMAL_PARAM_AWBMODE_FLUORESCENT,
+        'incandescent':  mmal.MMAL_PARAM_AWBMODE_INCANDESCENT,
+        'flash':         mmal.MMAL_PARAM_AWBMODE_FLASH,
+        'horizon':       mmal.MMAL_PARAM_AWBMODE_HORIZON,
+        'greyworld':     ct.c_uint32(10)
+        }
+
 class CameraInterface():
     lock = threading.Lock()
     
     def __init__(self):
         pass
 
-    
-    def mimic_get_image_from_camera(self):
-        fpBase = "mockImages"
-        images = listdir(fpBase)
-        img = Image.open(join(fpBase, images[randint(0, len(images) - 1)]))
-
-        return img
-
     def get_image_from_camera(self):
-        # CameraInterface.lock.acquire()
+        CameraInterface.lock.acquire()
 
-        img = self.mimic_get_image_from_camera()
+        imageStream = io.BytesIO()
+        with PiCameraWorld() as camera:
+            camera.awb_mode = 'greyworld'
+            camera.resolution = (1080,720)
+            camera.capture(imageStream, format='jpeg')
 
-        # CameraInterface.lock.release()
+        imageStream.seek(0)
+        img = Image.open(imageStream)
+
+        CameraInterface.lock.release()
 
         return img
