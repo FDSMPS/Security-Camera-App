@@ -1,6 +1,7 @@
 {
-    "serviceAccountFile": "fdsmps-android-firebase-adminsdk-sah32-f5c6d9a360.json",
-    "modelName": "Input-C-1-Output--2020-01--14-08-54",
+    "ServiceAccountFile": "fdsmps-android-firebase-adminsdk-sah32-f5c6d9a360.json",
+    "ModelName": "Input-C-1-Output--2020-01--14-08-54",
+    "DatabaseURL": "https://fdsmps-android.firebaseio.com/",
     "LiveFeedImageWidth": 1080,
     "LiveFeedImageHeight": 720,
     "QRCode": "123456",
@@ -9,5 +10,14 @@
     "PartitionWidth": 700,
     "PartitionHeight": 700,
     "PartitionImageWidthDelta": 150,
-    "PartitionImageHieghtDelta": 150
+    "PartitionImageHieghtDelta": 150,
+    "CameraResolutionWidth": 1080,
+    "CameraResolutionHeight": 720,
+    "FaceDetectionThreshold": 0.1,
+    "FaceDetectionNotificationDownTime": 300,
+    "MotionSensorOnePin": 11,
+    "MotionSensorTwoPin": 13,
+    "MotionSensorThreePin": 15,
+    "MMAL_PARAM_AWBMODE_T": 10,
+    "OneSecondDelay": 1
 }
