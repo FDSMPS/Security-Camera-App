@@ -35,7 +35,7 @@ def read_config_file():
         Reads the JSON configuration file
         @return configFile: The JSON configuration file as an object.
     '''
-    with open(os.join('..','config.json')) as jsonFile:
+    with open(os.path.join('..','config.json')) as jsonFile:
         configFile = json.load(jsonFile)
 
     return configFile
@@ -62,7 +62,6 @@ def run():
         and then starts all threads. Then begins an infinite loop so that the other threads keep running.
     '''
     settings = read_config_file()
-
     firebaseConnection = FirebaseInterface(settings)
     
     # If not registered exit

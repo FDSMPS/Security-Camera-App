@@ -13,6 +13,7 @@ import time
 from MotionSensor import MotionSensorInterface
 from ImageProcessor import ImageProcessor
 import numpy as np
+from os.path import join
 
 class FaceDetection():
     '''
@@ -37,7 +38,7 @@ class FaceDetection():
             the ML model to determine if a face is detected. If a face is detected then a notification 
             is created.
         '''
-        model = load_model(self.settings["ModelName"])
+        model = load_model(join("..", "model", self.settings["ModelName"]))
 
         while True:
             if self.motionSensor.is_motion_detected():

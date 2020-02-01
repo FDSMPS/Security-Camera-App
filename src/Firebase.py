@@ -8,6 +8,7 @@ import threading
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+from os.path import join
 
 class FirebaseInterface():
     '''
@@ -44,7 +45,7 @@ class FirebaseInterface():
         '''
             Establishes a connection to firebase. Only can be run once per session.
         '''
-        cred = credentials.Certificate(self.settings["ServiceAccountFile"])
+        cred = credentials.Certificate(join("..", self.settings["ServiceAccountFile"]))
         firebase_admin.initialize_app(cred, {
             'databaseURL': self.settings["DatabaseURL"]
         })

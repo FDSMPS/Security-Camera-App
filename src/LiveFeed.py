@@ -33,6 +33,6 @@ class LiveFeed():
         while True:
             print("Transmitting Live Feed")
             img = self.camera.get_image_from_camera()
-            img = ImageProcessor.resizeImage(img, self.settings)
+            img = ImageProcessor.resizeImage(img, (self.settings["LiveFeedImageWidth"], self.settings["LiveFeedImageHeight"]))
             imgString = str(ImageProcessor.convertImageToString(img), encoding='utf-8')
             self.firebase.update_live_feed(liveFeedImageRef, imgString)

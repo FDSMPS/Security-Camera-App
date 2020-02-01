@@ -14,21 +14,14 @@ import io
 from picamera import PiCamera, mmal
 import ctypes as ct
 
+MMAL_PARAM_AWBMODE_T = 10 # found in picamera datasheet
 
 class PiCameraWithoutIR(PiCamera):
     '''
         This class modifies the PiCamera class to perform IR filtering.
     '''
 
-    def __init__(self, settings):
-        '''
-            Creates an instance of this class and initialzes its class variables.
-            @param settings: the settings found in the config file.
-        '''
-        super().__init__()
-
-        # Perform IR filtering
-        AWB_MODES = {
+    AWB_MODES = {
             'off':           mmal.MMAL_PARAM_AWBMODE_OFF,
             'auto':          mmal.MMAL_PARAM_AWBMODE_AUTO,
             'sunlight':      mmal.MMAL_PARAM_AWBMODE_SUNLIGHT,
@@ -39,7 +32,7 @@ class PiCameraWithoutIR(PiCamera):
             'incandescent':  mmal.MMAL_PARAM_AWBMODE_INCANDESCENT,
             'flash':         mmal.MMAL_PARAM_AWBMODE_FLASH,
             'horizon':       mmal.MMAL_PARAM_AWBMODE_HORIZON,
-            'greyworld':     ct.c_uint32(settings["MMAL_PARAM_AWBMODE_T"])
+            'greyworld':     ct.c_uint32(MMAL_PARAM_AWBMODE_T)
             }
 
 class CameraInterface():
@@ -63,9 +56,9 @@ class CameraInterface():
         CameraInterface.lock.acquire()
 
         imageStream = io.BytesIO()
-        with PiCameraWithoutIR(self.settings) as camera:
+        with PiCameraWithoutIR() as camera:
             camera.awb_mode = 'greyworld'
-            camera.resolution = self.CameraResolution
+            camera.resolution = (self.settings["CameraResolutionWidth"], self.settings["CameraResolutionHeight"])
             camera.capture(imageStream, format='jpeg')
 
         imageStream.seek(0) # start image stream at the beginning
