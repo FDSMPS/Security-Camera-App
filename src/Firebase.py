@@ -9,6 +9,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from os.path import join
+import uuid
+from datetime import datetime
 
 class FirebaseInterface():
     '''
@@ -34,13 +36,52 @@ class FirebaseInterface():
 
         self.root = db.reference()
 
-    def sendNotification(self):
+
+    def get_users(self):
+        '''
+            Gets a list of all users connected to this camera. 
+        '''
+        return self.get_data(self.get_security_camera_ref().child("users"))
+
+    def generateNotificationImage(self, imageString):
+        notificationImageID = uuid.uuid4().hex
+        notificationImage = {"imageData": imageString, "imageId": notificationImageID}
+        self.root.child("NotificationImages").child(notificationImageID).set(notificationImage)
+        return notificationImageID
+
+    def generateNotification(self, user, notificationImageID):
+        notificationID = uuid.uuid4().hex
+        dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        notification = {"cameraQRCode": self.settings["QRCode"], "datetime": dt, "imageId": notificationImageID, "notificationId": notificationID}
+        self.root.child("Notifications").child(notificationID).set(notification)
+        return notificationID
+
+    def sendPushNotification(self, user):
+        # TODO: Send push notification
+        # self.settings["PushNotificationTitle"]
+        # self.settings["PushNotificationMessage"]
+        pass
+
+    def addNotificationToUser(self, user, notificationID):
+        userNotification = {"notificationId": notificationID, "read": False}
+        self.root.child("Users").child(user).child("UserNotifications").child(notificationID).set(userNotification)
+        
+
+    def sendNotificationToUser(self, user, notificationImageID):
+        notificationID = self.generateNotification(user, notificationImageID)
+        self.addNotificationToUser(user, notificationID)
+        self.sendPushNotification(user)
+
+    def sendNotifications(self, imageString):
         '''
             Sends a notification to users who are subscribed to this camera. 
         '''
-        # TODO: Send notification to associates users.
-        pass
-    
+        users = self.get_users()
+        if len(users) > 0:
+            notificationImageID = self.generateNotificationImage(imageString)
+            for user in users:
+                self.sendNotificationToUser(user, notificationImageID)
+        
     def connect_to_firebase(self):
         '''
             Establishes a connection to firebase. Only can be run once per session.
@@ -50,7 +91,6 @@ class FirebaseInterface():
             'databaseURL': self.settings["DatabaseURL"]
         })
 
-    
     def get_data(self, ref = None):
         '''
             Get all data from a given node.
@@ -75,10 +115,20 @@ class FirebaseInterface():
             Determine if the current camera is registered.
             @return: if the camera is registered or not.
         '''
-        securityCameraReference = self.get_security_camera_ref()
-        registeredRef = securityCameraReference.child('registered')
-        registered = self.get_data(registeredRef)
-        return registered
+        registeredString = self.get_data(self.get_security_camera_ref().child("registered"))
+
+        # convert from string to bool
+        return registeredString.lower() == "true"
+    
+    def is_enabled(self):
+        '''
+            Determine if the current camera is enabled.
+            @return: if the camera is enabled or not.
+        '''
+        enabledString = self.get_data(self.get_security_camera_ref().child("cameraEnabled"))
+        
+        # convert from string to bool
+        return enabledString.lower() == "true"
 
     def get_live_feed_image_ref(self):
         '''
@@ -86,7 +136,7 @@ class FirebaseInterface():
             @return liveFeedImageRef: the live feed image reference
         '''
         securityCameraReference = self.get_security_camera_ref()
-        liveFeedImageRef = securityCameraReference.child("currentImage")
+        liveFeedImageRef = securityCameraReference.child("liveFeedImage")
         return liveFeedImageRef
 
     def update_live_feed(self, liveFeedImageRef, imageString):

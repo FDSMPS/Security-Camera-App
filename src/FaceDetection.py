@@ -41,19 +41,20 @@ class FaceDetection():
         model = load_model(join("..", "model", self.settings["ModelName"]))
 
         while True:
-            if self.motionSensor.is_motion_detected():
-                print("Motion Detected")
-                img = self.camera.get_image_from_camera()
-                
-                MLSize = (self.settings["MLImageWidth"], self.settings["MLImageHeight"])
-                partitionedImages = ImageProcessor.partitionImage(img, MLSize, self.settings["PartitionImageWidthDelta"],\
-                    self.settings["PartitionImageHieghtDelta"],(self.settings["PartitionWidth"], self.settings["PartitionHeight"]))
+            if self.firebase.is_enabled():
+                if self.motionSensor.is_motion_detected():
+                    print("Motion Detected")
+                    img = self.camera.get_image_from_camera()
+                    
+                    MLSize = (self.settings["MLImageWidth"], self.settings["MLImageHeight"])
+                    partitionedImages = ImageProcessor.partitionImage(img, MLSize, self.settings["PartitionImageWidthDelta"],\
+                        self.settings["PartitionImageHieghtDelta"],(self.settings["PartitionWidth"], self.settings["PartitionHeight"]))
 
-                # sometimes false results return x.xx E-16 therefore we set a threshold to bypass this
-                faceDetected = np.sum(model.predict(np.array(partitionedImages))) > self.settings["FaceDetectionThreshold"]
-                print("Face Detected?: " + str(faceDetected))
+                    # sometimes false results return x.xx E-16 therefore we set a threshold to bypass this
+                    faceDetected = np.sum(model.predict(np.array(partitionedImages))) > self.settings["FaceDetectionThreshold"]
+                    print("Face Detected?: " + str(faceDetected))
 
-                # if a face is detected send a notification
-                if (faceDetected):
-                    self.firebase.sendNotification()
+                    # if a face is detected send a notification
+                    # if (faceDetected):
+                    self.firebase.sendNotifications(ImageProcessor.convertImageToString(img))
                     time.sleep(self.settings["FaceDetectionNotificationDownTime"]) 

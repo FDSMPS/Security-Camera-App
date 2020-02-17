@@ -48,7 +48,7 @@ class ImageProcessor():
         '''
         buffered = io.BytesIO()
         img.save(buffered, format="JPEG")
-        img_str = base64.b64encode(buffered.getvalue())
+        img_str = str(base64.b64encode(buffered.getvalue()), encoding='utf-8')
         return img_str
 
     @staticmethod
