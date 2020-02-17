@@ -1,5 +1,6 @@
 {
     "ServiceAccountFile": "fdsmps-android-firebase-adminsdk-sah32-b63472a2c3.json",
+    "CloudMessagingAPIFile": "CloudMessagingApiKey",
 
     "ModelName": "Input-C-1-Output--2020-01--14-08-54",
     

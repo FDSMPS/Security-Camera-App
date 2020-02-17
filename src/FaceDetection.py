@@ -55,6 +55,6 @@ class FaceDetection():
                     print("Face Detected?: " + str(faceDetected))
 
                     # if a face is detected send a notification
-                    # if (faceDetected):
-                    self.firebase.sendNotifications(ImageProcessor.convertImageToString(img))
-                    time.sleep(self.settings["FaceDetectionNotificationDownTime"]) 
+                    if (faceDetected):
+                        self.firebase.sendNotifications(ImageProcessor.convertImageToString(img))
+                        time.sleep(self.settings["FaceDetectionNotificationDownTime"]) 

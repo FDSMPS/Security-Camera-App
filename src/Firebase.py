@@ -11,6 +11,7 @@ from firebase_admin import db
 from os.path import join
 import uuid
 from datetime import datetime
+from pyfcm import FCMNotification
 
 class FirebaseInterface():
     '''
@@ -57,10 +58,30 @@ class FirebaseInterface():
         return notificationID
 
     def sendPushNotification(self, user):
-        # TODO: Send push notification
-        # self.settings["PushNotificationTitle"]
-        # self.settings["PushNotificationMessage"]
-        pass
+        # Read in API key
+        with open(join("..", self.settings["CloudMessagingAPIFile"]), 'r') as apiKeyFile:
+            APIKey = apiKeyFile.read()
+
+        pushNotification = FCMNotification(api_key=APIKey)
+
+        return pushNotification.notify_single_device(\
+            registration_id = self.root.child("Users").child(user).child("registrationId").get(), \
+            message_title = self.settings["PushNotificationTitle"], \
+            message_body = self.settings["PushNotificationMessage"])
+
+        # return pushNotification.notify_single_device(\
+        #     registration_id = user, \
+        #     message_title = self.settings["PushNotificationTitle"], \
+        #     message_body = self.settings["PushNotificationMessage"])
+
+        # return pushNotification.notify_multiple_devices(\
+        #     registration_ids = [user], \
+        #     message_title = self.settings["PushNotificationTitle"], \
+        #     message_body = self.settings["PushNotificationMessage"])
+
+        # return pushNotification.notify_topic_subscribers(\
+        #     topic_name = self.settings["PushNotificationTitle"], \
+        #     message_body = self.settings["PushNotificationMessage"])
 
     def addNotificationToUser(self, user, notificationID):
         userNotification = {"notificationId": notificationID, "read": False}
@@ -70,7 +91,7 @@ class FirebaseInterface():
     def sendNotificationToUser(self, user, notificationImageID):
         notificationID = self.generateNotification(user, notificationImageID)
         self.addNotificationToUser(user, notificationID)
-        self.sendPushNotification(user)
+        print(self.sendPushNotification(user))
 
     def sendNotifications(self, imageString):
         '''
