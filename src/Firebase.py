@@ -64,27 +64,12 @@ class FirebaseInterface():
 
         pushNotification = FCMNotification(api_key=APIKey)
 
-        # return pushNotification.notify_single_device(\
-        #     registration_id = self.root.child("Users").child(user).child("registrationId").get(), \
-        #     message_title = self.settings["PushNotificationTitle"], \
-        #     message_body = self.settings["PushNotificationMessage"])
-
-        # return pushNotification.notify_single_device(\
-        #     registration_id = user, \
-        #     message_title = self.settings["PushNotificationTitle"], \
-        #     message_body = self.settings["PushNotificationMessage"])
-
-        # return pushNotification.notify_multiple_devices(\
-        #     registration_ids = [user], \
-        #     message_title = self.settings["PushNotificationTitle"], \
-        #     message_body = self.settings["PushNotificationMessage"])
-
         return pushNotification.notify_topic_subscribers(\
             topic_name = self.settings["QRCode"], \
             message_body = self.settings["PushNotificationMessage"])
 
     def addNotificationToUser(self, user, notificationID):
-        userNotification = {"notificationId": notificationID, "read": False}
+        userNotification = {"notificationId": notificationID, "read": "false"}
         self.root.child("Users").child(user).child("UserNotifications").child(notificationID).set(userNotification)
         
 

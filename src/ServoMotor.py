@@ -1,9 +1,21 @@
+'''
+    Creation Date: Feb 3, 2020
+    Author: Tymoore Jamal
+    Content: This file contains the Servo Motor class which handles the motion detectors.
+'''
+
 import RPi.GPIO as GPIO
 import time
 
 class ServoMotorInterface():
-
+    '''
+        The ServoMotor class. Controlls both servo motors.
+    '''
     def set_servo_x_angle(self, angle):
+        '''
+            Sets the servo's X angle
+            @param angle: the angle to set
+        '''
         if angle > self.settings["ServoMotorXMax"]:
             angle = self.settings["ServoMotorXMax"]
 
@@ -12,6 +24,10 @@ class ServoMotorInterface():
         self.xpwm.ChangeDutyCycle(angle)
 
     def set_servo_y_angle(self, angle):
+        '''
+            Sets the servo's Y angle
+            @param angle: the angle to set
+        '''
         if angle > self.settings["ServoMotorYMax"]:
             angle = self.settings["ServoMotorYMax"]
         
