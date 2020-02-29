@@ -64,10 +64,10 @@ class FirebaseInterface():
 
         pushNotification = FCMNotification(api_key=APIKey)
 
-        return pushNotification.notify_single_device(\
-            registration_id = self.root.child("Users").child(user).child("registrationId").get(), \
-            message_title = self.settings["PushNotificationTitle"], \
-            message_body = self.settings["PushNotificationMessage"])
+        # return pushNotification.notify_single_device(\
+        #     registration_id = self.root.child("Users").child(user).child("registrationId").get(), \
+        #     message_title = self.settings["PushNotificationTitle"], \
+        #     message_body = self.settings["PushNotificationMessage"])
 
         # return pushNotification.notify_single_device(\
         #     registration_id = user, \
@@ -79,9 +79,9 @@ class FirebaseInterface():
         #     message_title = self.settings["PushNotificationTitle"], \
         #     message_body = self.settings["PushNotificationMessage"])
 
-        # return pushNotification.notify_topic_subscribers(\
-        #     topic_name = self.settings["PushNotificationTitle"], \
-        #     message_body = self.settings["PushNotificationMessage"])
+        return pushNotification.notify_topic_subscribers(\
+            topic_name = self.settings["QRCode"], \
+            message_body = self.settings["PushNotificationMessage"])
 
     def addNotificationToUser(self, user, notificationID):
         userNotification = {"notificationId": notificationID, "read": False}
@@ -141,6 +141,20 @@ class FirebaseInterface():
         # convert from string to bool
         return registeredString.lower() == "true"
     
+    def get_servo_x_position(self):
+        '''
+            Get the servo X position.
+            @return: the servo x position.
+        '''
+        return self.get_data(self.get_security_camera_ref().child("servoXPosition"))
+
+    def get_servo_y_position(self):
+        '''
+            Get the servo y position.
+            @return: the servo y position.
+        '''
+        return self.get_data(self.get_security_camera_ref().child("servoYPosition"))
+
     def is_enabled(self):
         '''
             Determine if the current camera is enabled.

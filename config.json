@@ -17,11 +17,20 @@
     "CameraResolutionHeight": 720,
     
     "FaceDetectionThreshold": 0.1,
-    "FaceDetectionNotificationDownTime": 300,
+    "FaceDetectionNotificationDownTime": 60,
     
     "MotionSensorOnePin": 11,
     "MotionSensorTwoPin": 13,
     "MotionSensorThreePin": 15,
+
+    "ServoMotorXPin": 16,
+    "ServoMotorYPin": 18,
+
+    "ServoMotorXMin": 2.0,
+    "ServoMotorXMax": 12.0,
+    "ServoMotorYMin": 3.0,
+    "ServoMotorYMax": 12.0,
+    
     
     "OneSecondDelay": 1,
     "MaxIterations": 1000,

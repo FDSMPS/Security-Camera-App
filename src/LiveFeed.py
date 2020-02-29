@@ -7,6 +7,7 @@
 from Camera import CameraInterface
 from Firebase import FirebaseInterface
 from ImageProcessor import ImageProcessor
+from ServoMotor import ServoMotorInterface
 import time
 
 class LiveFeed():
@@ -22,6 +23,7 @@ class LiveFeed():
         self.settings = settings
         self.camera = CameraInterface(settings)
         self.firebase = FirebaseInterface(settings)
+        self.servoMotor = ServoMotorInterface(settings)
 
     def run(self):
         '''
@@ -43,8 +45,12 @@ class LiveFeed():
                 iteration = (iteration + 1) % self.settings["MaxIterations"]
 
                 # only check if camera is enabled every second. If this was done every iteration, live feed fps would suffer
+                # also only move the position once a second
                 if iteration % self.settings["LiveFeedFPS"] == 0:
                     cameraEnabled = self.firebase.is_enabled()
+                    self.servoMotor.set_servo_x_angle(float(self.firebase.get_servo_x_position()))
+                    self.servoMotor.set_servo_y_angle(float(self.firebase.get_servo_x_position()))
+
 
             else:
                 cameraEnabled = self.firebase.is_enabled()
@@ -58,3 +64,4 @@ class LiveFeed():
         img = ImageProcessor.resizeImage(img, (self.settings["LiveFeedImageWidth"], self.settings["LiveFeedImageHeight"]))
         imgString = ImageProcessor.convertImageToString(img)
         self.firebase.update_live_feed(liveFeedImageRef, imgString)
+        
