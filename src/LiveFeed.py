@@ -45,7 +45,7 @@ class LiveFeed():
                 self.transmit_livefeed(liveFeedImageRef)
 
                 xpos = float(self.firebase.get_servo_x_position())
-                ypos = float(self.firebase.get_servo_x_position())
+                ypos = float(self.firebase.get_servo_y_position())
 
                 if xpos != prevXPos:
                     prevXPos = xpos
@@ -54,7 +54,7 @@ class LiveFeed():
                 if ypos != prevYPos:
                     prevYPos = ypos
                     self.servoMotor.set_servo_y_angle(ypos)
-                    
+
                 # increment iteration but reset at threshold to avoid overflow
                 iteration = (iteration + 1) % self.settings["MaxIterations"]
 
