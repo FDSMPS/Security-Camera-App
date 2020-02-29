@@ -35,6 +35,9 @@ class LiveFeed():
         iteration = 0
         cameraEnabled = self.firebase.is_enabled()
 
+        prevXPos = -1
+        prevYPos = -1
+
         while True:
             if cameraEnabled:
 
@@ -48,8 +51,16 @@ class LiveFeed():
                 # also only move the position once a second
                 if iteration % self.settings["LiveFeedFPS"] == 0:
                     cameraEnabled = self.firebase.is_enabled()
-                    self.servoMotor.set_servo_x_angle(float(self.firebase.get_servo_x_position()))
-                    self.servoMotor.set_servo_y_angle(float(self.firebase.get_servo_x_position()))
+                    xpos = float(self.firebase.get_servo_x_position())
+                    ypos = float(self.firebase.get_servo_x_position())
+
+                    if xpos != prevXPos:
+                        prevXPos = xpos
+                        self.servoMotor.set_servo_x_angle(xpos)
+
+                    if ypos != prevYPos:
+                        prevYPos = ypos
+                        self.servoMotor.set_servo_y_angle(ypos)
 
 
             else:
