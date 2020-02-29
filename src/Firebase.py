@@ -136,10 +136,13 @@ class FirebaseInterface():
             Determine if the current camera is registered.
             @return: if the camera is registered or not.
         '''
-        registeredString = self.get_data(self.get_security_camera_ref().child("registered"))
+        registered = self.get_data(self.get_security_camera_ref().child("registered"))
 
-        # convert from string to bool
-        return registeredString.lower() == "true"
+        # convert from string to bool if needed, otherwise return the bool
+        if type(registered) == bool:
+            return registered
+
+        return registered.lower() == "true"
     
     def get_servo_x_position(self):
         '''
@@ -160,10 +163,13 @@ class FirebaseInterface():
             Determine if the current camera is enabled.
             @return: if the camera is enabled or not.
         '''
-        enabledString = self.get_data(self.get_security_camera_ref().child("cameraEnabled"))
+        enabled = self.get_data(self.get_security_camera_ref().child("cameraEnabled"))
         
-        # convert from string to bool
-        return enabledString.lower() == "true"
+        # convert from string to bool if not a bool
+        if type(enabled) == bool:
+            return enabled
+
+        return enabled.lower() == "true"
 
     def get_live_feed_image_ref(self):
         '''
