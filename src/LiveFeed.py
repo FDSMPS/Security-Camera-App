@@ -44,23 +44,23 @@ class LiveFeed():
                 # Transmit the live feed
                 self.transmit_livefeed(liveFeedImageRef)
 
+                xpos = float(self.firebase.get_servo_x_position())
+                ypos = float(self.firebase.get_servo_x_position())
+
+                if xpos != prevXPos:
+                    prevXPos = xpos
+                    self.servoMotor.set_servo_x_angle(xpos)
+
+                if ypos != prevYPos:
+                    prevYPos = ypos
+                    self.servoMotor.set_servo_y_angle(ypos)
+                    
                 # increment iteration but reset at threshold to avoid overflow
                 iteration = (iteration + 1) % self.settings["MaxIterations"]
 
                 # only check if camera is enabled every second. If this was done every iteration, live feed fps would suffer
-                # also only move the position once a second
                 if iteration % self.settings["LiveFeedFPS"] == 0:
                     cameraEnabled = self.firebase.is_enabled()
-                    xpos = float(self.firebase.get_servo_x_position())
-                    ypos = float(self.firebase.get_servo_x_position())
-
-                    if xpos != prevXPos:
-                        prevXPos = xpos
-                        self.servoMotor.set_servo_x_angle(xpos)
-
-                    if ypos != prevYPos:
-                        prevYPos = ypos
-                        self.servoMotor.set_servo_y_angle(ypos)
 
 
             else:
