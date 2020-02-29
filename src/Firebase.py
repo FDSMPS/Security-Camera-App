@@ -53,7 +53,7 @@ class FirebaseInterface():
     def generateNotification(self, user, notificationImageID):
         notificationID = uuid.uuid4().hex
         dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        notification = {"cameraQRCode": self.settings["QRCode"], "datetime": dt, "imageId": notificationImageID, "notificationId": notificationID}
+        notification = {"cameraCode": self.settings["QRCode"], "datetime": dt, "imageId": notificationImageID, "notificationId": notificationID}
         self.root.child("Notifications").child(notificationID).set(notification)
         return notificationID
 
