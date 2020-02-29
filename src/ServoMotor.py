@@ -35,3 +35,7 @@ class ServoMotorInterface():
         self.xpwm = GPIO.PWM(self.settings["ServoMotorXPin"], 50)
         self.ypwm = GPIO.PWM(self.settings["ServoMotorYPin"], 50)
 
+        self.xpwm.start(0)
+        self.ypwm.start(0)
+
+
