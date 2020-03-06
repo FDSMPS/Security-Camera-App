@@ -24,7 +24,7 @@ class ServoMotorInterface():
         if angle < self.settings["ServoMotorXMin"]:
             angle = self.settings["ServoMotorXMin"]
         self.xpwm.ChangeDutyCycle(angle)
-
+        
         # self.stop_servo_x()
 
 
@@ -52,11 +52,11 @@ class ServoMotorInterface():
     def start_servo_y(self):
         self.ypwm.start(0)
 
-    def stop_servo_x(self):
-        self.xpwm.stop()
+    def pause_servo_x(self):
+        self.xpwm.ChangeDutyCycle(0)
 
-    def stop_servo_y(self):
-        self.ypwm.stop()
+    def pause_servo_y(self):
+        self.ypwm.ChangeDutyCycle(0)
 
 
     def __init__(self, settings):

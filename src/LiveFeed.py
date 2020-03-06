@@ -50,10 +50,14 @@ class LiveFeed():
                 if xpos != prevXPos:
                     prevXPos = xpos
                     self.servoMotor.set_servo_x_angle(xpos)
+                else:
+                    self.servoMotor.pause_servo_x()
 
                 if ypos != prevYPos:
                     prevYPos = ypos
                     self.servoMotor.set_servo_y_angle(ypos)
+                else:
+                    self.servoMotor.pause_servo_y()
 
                 # increment iteration but reset at threshold to avoid overflow
                 iteration = (iteration + 1) % self.settings["MaxIterations"]
