@@ -9,10 +9,6 @@ Supported version:
 * Python 3.7 
 * Tensor Flow 1.14
 
-To dos:
-* Send notifications to users subscribed to the current camera
-
-
 3rd Party Libraries used:
 * Tensor Flow
 * NumPy 
